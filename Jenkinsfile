@@ -11,4 +11,18 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            echo "This will always run"
+        }
+        success {
+            echo "This will success run"
+        }
+        failure{
+            echo "failure"
+        }
+        cleanup{
+            echo "cleanup"
+        }
+    }
 }
