@@ -23,6 +23,10 @@ pipeline {
                 echo "Hello Test"
                 sleep(5)
                 echo "Bangun dari 5 detik"
+            script{
+                def data : ArrayList = ['andi','budi','caca','dodi','erik']
+                writeJSOn(file: 'data.json', json:data)
+            }
             }
         }
 
