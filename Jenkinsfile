@@ -1,6 +1,8 @@
 pipeline {
     agent none
-
+    environment{
+        AUTHOR="Mikhael"
+    }
     stages {
 
         stage("Prepare") {
