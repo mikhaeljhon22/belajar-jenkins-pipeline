@@ -1,72 +1,57 @@
 pipeline {
     agent none
 
-      
     stages {
-          stage("Prepare"){
-            agent{
-                node{
-                    label "linux & java11"
-                }
+
+        stage("Prepare") {
+            agent { label "linux && java11" }
+            steps {
+                echo "Start Jobs : ${env.JOB_NAME}"
+                echo "Start Build : ${env.BUILD_NUMBER }"
+                echo "Start Build : ${env.BUILD_ID}"
             }
-           steps{
-             echo("Start Jobs : ${env.JOB_NAME}")
-             echo("Start Build : ${env.BUILD_NUMBER }")
-             echo("Start Build : ${env.BUILD_ID}")
-           }
         }
-        
+
         stage('Build') {
-              agent {
-        node{
-            label "linux && java11"
-        }
-    }
+            agent { label "linux && java11" }
             steps {
                 echo "Hello Build"
-                sleep(5)
+                sleep 5
                 echo "Bangun dari 5 detik"
-              script{
-                for(int i=0; i<5; i++){
-                    echo "perulangan ke ${i}"
+                script {
+                    for (int i = 0; i < 5; i++) {
+                        echo "perulangan ke ${i}"
+                    }
                 }
-              }
             }
         }
 
- stage('Test') {
-      agent {
-        node{
-            label "linux && java11"
-        }
-    }
+        stage('Test') {
+            agent { label "linux && java11" }
             steps {
                 echo "Hello Test"
-                sleep(5)
+                sleep 5
                 echo "Bangun dari 5 detik"
-            script{
-                def data = [
-                    name: 'Jenkins',
-                    type: 'CI/CD'
-                ]
-                writeJSON(file: 'data.json', json:data)
-            }
+                script {
+                    def data = [
+                        name: 'Jenkins',
+                        type: 'CI/CD'
+                    ]
+                    writeJSON(file: 'data.json', json: data)
+                }
             }
         }
 
- stage('Deploy') {
-      agent {
-        node{
-            label "linux && java11"
-        }
-    }
+        stage('Deploy') {
+            agent { label "linux && java11" }
             steps {
                 echo "Hello Deploy"
-                sleep(5)
+                sleep 5
                 echo "Bangun dari 5 detik"
             }
         }
     }
+
     post {
         always {
             echo "This will always run"
@@ -74,10 +59,10 @@ pipeline {
         success {
             echo "This will success run"
         }
-        failure{
+        failure {
             echo "failure"
         }
-        cleanup{
+        cleanup {
             echo "cleanup"
         }
     }
