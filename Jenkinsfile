@@ -8,19 +8,24 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Hello Build"
+                sleep(5)
+                echo "Bangun dari 5 detik"
             }
         }
 
  stage('Test') {
             steps {
                 echo "Hello Test"
-                sh("error")
+                sleep(5)
+                echo "Bangun dari 5 detik"
             }
         }
 
  stage('Deploy') {
             steps {
                 echo "Hello Deploy"
+                sleep(5)
+                echo "Bangun dari 5 detik"
             }
         }
     }
