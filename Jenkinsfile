@@ -24,7 +24,10 @@ pipeline {
                 sleep(5)
                 echo "Bangun dari 5 detik"
             script{
-                def data : ArrayList = ['andi','budi','caca','dodi','erik']
+                def data = [
+                    name: 'Jenkins',
+                    type: 'CI/CD'
+                ]
                 writeJSON(file: 'data.json', json:data)
             }
             }
