@@ -23,6 +23,7 @@ pipeline {
         stage('Parallel Jobs') {
 
             parallel {
+
                 stage("Parameter") {
                     agent { label "linux && java11" }
                     steps {
@@ -74,6 +75,7 @@ pipeline {
                 }
 
                 stage('Test') {
+                    agent { label "linux && java11" }
                     steps {
                         echo "Hello Test"
                         sleep 5
@@ -102,6 +104,7 @@ pipeline {
                 }
 
                 stage('Deploy') {
+                    agent { label "linux && java11" }
                     steps {
                         script {
                             def userInput = input(
@@ -126,10 +129,9 @@ pipeline {
                 }
 
                 stage("Release") {
+                    agent { label "linux && java11" }
                     when {
-                        expression {
-                            return params.FLAG
-                        }
+                        expression { return params.FLAG }
                     }
                     steps {
                         echo "release aplikasi ke production"
