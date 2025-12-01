@@ -48,7 +48,7 @@ pipeline {
                 echo "Start Build : ${env.BUILD_NUMBER}"
                 echo "Start Build : ${env.BUILD_ID}"
             }
-            stages {
+            stages{
                 stage("Prepare Java"){
                     steps {
                         echo "Prepare Java"
