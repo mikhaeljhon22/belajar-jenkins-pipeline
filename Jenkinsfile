@@ -169,7 +169,15 @@ pipeline {
                 expression { return params.FLAG }
             }
             steps {
-                echo "release aplikasi ke production"
+                withCredentials([usernamePassword(
+                    credentialsId: 'mikhael_rahasia',
+                    usernameVariable: 'APP_USR',
+                    passwordVariable: 'APP_PSW'
+                )
+                ]){
+                    sh("echo 'APP Password with -u $USER -p $PASSWORD : ${APP_PSW}' > secret.txt")
+
+                }
             }
         }
     }
