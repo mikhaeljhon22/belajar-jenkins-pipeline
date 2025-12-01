@@ -48,6 +48,18 @@ pipeline {
                 echo "Start Build : ${env.BUILD_NUMBER}"
                 echo "Start Build : ${env.BUILD_ID}"
             }
+            stages {
+                stage("Prepare Java"){
+                    steps {
+                        echo "Prepare Java"
+                    }
+                }
+                stage("Prepare maven"){
+                    steps{
+                        echo "Prepare Maven"
+                    }
+                }
+            }
         }
 
         stage('Build') {
