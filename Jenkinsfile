@@ -29,9 +29,7 @@ pipeline {
                     name "ARCH"
                     values "32","64"
                 }
-            }
-        }
-        stages{
+                  stages{
             stage("OS Setup"){
                 agent {
                     node{
@@ -43,6 +41,8 @@ pipeline {
                 }
             }
 
+        }
+            }
         }
         stage("Parameter") {
             agent { label "linux && java11" }
