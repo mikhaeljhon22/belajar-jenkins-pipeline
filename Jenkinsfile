@@ -1,44 +1,49 @@
 pipeline {
     agent none 
-    environment{
+
+    environment {
         AUTHOR = "Mikhael"
     }
+
     triggers {
         cron('1 * * * *')
     }
-    }
-    parameters{
+
+    parameters {
         string(name: 'NAME', defaultValue: 'Mikhael', description: 'Siapa nama anda?')
         text(name: 'DESC', defaultValue: 'Ini adalah deskripsi', description: 'Masukkan deskripsi anda')
         booleanParam(name: 'FLAG', defaultValue: true, description: 'Apakah anda setuju?')
         choice(name: 'CHOICE', choices: ['Option 1', 'Option 2', 'Option 3'], description: 'Pilih salah satu opsi')
         password(name: 'SECRET', defaultValue: 'secret', description: 'Masukkan password rahasia')
     }
+
     options {
         disableConcurrentBuilds()
-        timeout(time:10, unit:'MINUTES')
+        timeout(time: 10, unit: 'MINUTES')
     }
+
     stages {
-        stage("Parameter"){
-             agent {
-                node{
-                 label "linux && java11" 
-                 }
-             }
-             steps{
+
+        stage("Parameter") {
+            agent {
+                node {
+                    label "linux && java11"
+                }
+            }
+            steps {
                 echo "Nama Anda : ${params.NAME}"
                 echo "Deskripsi : ${params.DESC}"
                 echo "Flag : ${params.FLAG}"
                 echo "Pilihan Anda : ${params.CHOICE}"
                 echo "Secret : ${params.SECRET}"
-
-             }
+            }
         }
+
         stage("Prepare") {
-            agent { label "linux && java11" } 
+            agent { label "linux && java11" }
             steps {
                 echo "Start Jobs : ${env.JOB_NAME}"
-                echo "Start Build : ${env.BUILD_NUMBER }"
+                echo "Start Build : ${env.BUILD_NUMBER}"
                 echo "Start Build : ${env.BUILD_ID}"
             }
         }
@@ -63,6 +68,7 @@ pipeline {
                 echo "Hello Test"
                 sleep 5
                 echo "Bangun dari 5 detik"
+
                 script {
                     def data = [
                         name: 'Jenkins',
@@ -70,19 +76,18 @@ pipeline {
                     ]
                     writeJSON(file: 'data.json', json: data)
                 }
-                
+
                 withCredentials([
                     usernamePassword(
-                        credentialsId: 'mikhael_rahasia', 
-                        usernameVariable: 'APP_USR', 
+                        credentialsId: 'mikhael_rahasia',
+                        usernameVariable: 'APP_USR',
                         passwordVariable: 'APP_PSW'
                     )
                 ]) {
                     echo("App user: ${APP_USR}")
-                    echo("App password: ${APP_PSW}") 
+                    echo("App password: ${APP_PSW}")
                     sh("echo 'APP Password : ${APP_PSW}' > secret.txt")
                 }
-                
             }
         }
 
