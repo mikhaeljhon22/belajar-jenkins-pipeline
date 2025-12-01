@@ -1,5 +1,5 @@
 pipeline {
-    agent none 
+    agent none
 
     environment {
         AUTHOR = "Mikhael"
@@ -19,31 +19,32 @@ pipeline {
     }
 
     stages {
-        stage("OS setup"){
-            matrix{
-                axis{
-                    name = "OS"
-                    values "linus","windows","macos"
-                }
-                axis{
-                    name "ARCH"
-                    values "32","64"
-                }
-                  stages{
-            stage("OS Setup"){
-                agent {
-                    node{
-                        label "linux && java11"
+
+        stage("OS setup") {
+            matrix {
+                axes {
+                    axis {
+                        name 'OS'
+                        values 'linux', 'windows', 'macos'
+                    }
+                    axis {
+                        name 'ARCH'
+                        values '32', '64'
                     }
                 }
-                steps{
-                    echo "Setup ${OS} dengan aristektur ${ARCH}"
+
+                agent { label "linux && java11" }
+
+                stages {
+                    stage("OS Setup") {
+                        steps {
+                            echo "Setup ${OS} dengan arsitektur ${ARCH}"
+                        }
+                    }
                 }
             }
+        }
 
-        }
-            }
-        }
         stage("Parameter") {
             agent { label "linux && java11" }
             steps {
@@ -68,7 +69,7 @@ pipeline {
             agent { label "linux && java11" }
             steps {
                 echo "Prepare Java"
-                sleep(5)
+                sleep 5
             }
         }
 
@@ -76,7 +77,7 @@ pipeline {
             agent { label "linux && java11" }
             steps {
                 echo "Prepare Maven"
-                sleep(5)
+                sleep 5
             }
         }
 
@@ -151,9 +152,7 @@ pipeline {
         stage("Release") {
             agent { label "linux && java11" }
             when {
-                expression {
-                    return params.FLAG
-                }
+                expression { return params.FLAG }
             }
             steps {
                 echo "release aplikasi ke production"
@@ -162,17 +161,9 @@ pipeline {
     }
 
     post {
-        always {
-            echo "This will always run"
-        }
-        success {
-            echo "This will success run"
-        }
-        failure {
-            echo "failure"
-        }
-        cleanup {
-            echo "cleanup"
-        }
+        always { echo "This will always run" }
+        success { echo "This will success run" }
+        failure { echo "failure" }
+        cleanup { echo "cleanup" }
     }
 }
