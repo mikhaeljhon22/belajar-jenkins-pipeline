@@ -18,7 +18,7 @@ pipeline {
         timeout(time: 10, unit: 'MINUTES')
     }
 
-    stages {
+    parallel {
 
         stage("Parameter") {
             agent { label "linux && java11" }
