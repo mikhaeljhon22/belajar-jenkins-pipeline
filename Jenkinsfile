@@ -23,11 +23,11 @@ pipeline {
              }
              steps{
                 echo "Nama Anda : ${params.NAME}"
-                echo "Deskripsi : ${param.DESC}"
+                echo "Deskripsi : ${params.DESC}"
                 echo "Flag : ${params.FLAG}"
                 echo "Pilihan Anda : ${params.CHOICE}"
                 echo "Secret : ${params.SECRET}"
-                
+
              }
         }
         stage("Prepare") {
