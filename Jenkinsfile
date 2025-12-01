@@ -3,6 +3,10 @@ pipeline {
     environment{
         AUTHOR = "Mikhael"
     }
+    triggers {
+        cron('1 * * * *')
+    }
+    }
     parameters{
         string(name: 'NAME', defaultValue: 'Mikhael', description: 'Siapa nama anda?')
         text(name: 'DESC', defaultValue: 'Ini adalah deskripsi', description: 'Masukkan deskripsi anda')
