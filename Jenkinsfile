@@ -5,11 +5,11 @@ pipeline {
         AUTHOR = "Mikhael"
     }
 
-    triggers {
-        cron('1 * * * *')
-        //PollSCM('1 * * * *')
-        //upstream(upstreamProjects: 'job1,job2', threshold: hudson.model.Result.SUCCESS)
-    }
+    // triggers {
+    //     cron('1 * * * *')
+    //     //PollSCM('1 * * * *')
+    //     //upstream(upstreamProjects: 'job1,job2', threshold: hudson.model.Result.SUCCESS)
+    // }
 
     parameters {
         string(name: 'NAME', defaultValue: 'Mikhael', description: 'Siapa nama anda?')
@@ -94,6 +94,11 @@ pipeline {
         }
 
         stage('Deploy') {
+            input{
+                message "Apakah anda yakin untuk ke deploy?"
+                ok "Yes, I'm sure"
+                submitter "admin, user1"
+            }
             agent { label "linux && java11" }
             steps {
                 echo "Hello Deploy"
