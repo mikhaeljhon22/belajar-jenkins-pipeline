@@ -6,6 +6,9 @@ pipeline {
     stages {
 
         stage("Prepare") {
+            environment{
+                APP = credentials("mikhael_rahasia")
+            }
             agent { label "linux && java11" }
             steps {
                 echo "Start Jobs : ${env.JOB_NAME}"
@@ -41,6 +44,9 @@ pipeline {
                     ]
                     writeJSON(file: 'data.json', json: data)
                 }
+                echo("App user: ${APP_USR}")
+                echo("App password: ${APP_PSW}")
+
             }
         }
 
