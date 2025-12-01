@@ -99,7 +99,7 @@ pipeline {
                 ok "Yes, I'm sure"
                 submitter "admin, user1"
                 parameters{
-                    choice(name: 'TARGET_ENV', choice: ['Dev','QA','PROD'], description: 'Pilih target environment untuk deploy?')
+                    choice(name: 'TARGET_ENV', choices: ['Dev','QA','PROD'], description: 'Pilih target environment untuk deploy?')
                 }
             }
             agent { label "linux && java11" }
