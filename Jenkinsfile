@@ -6,6 +6,14 @@ pipeline {
     stages {
 
         stage("Prepare") {
+            script {
+            withCredentials([
+                usernamePassword(
+                    credentialsId: 'mikhael_rahasia', 
+                    usernameVariable: 'APP_USR', 
+                    passwordVariable: 'APP_PSW'
+                )
+            ])
             environment{
                 APP = credentials("mikhael_rahasia")
             }
@@ -74,4 +82,5 @@ pipeline {
             echo "cleanup"
         }
     }
+}
 }
