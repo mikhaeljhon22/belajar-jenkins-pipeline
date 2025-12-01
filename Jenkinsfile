@@ -20,6 +20,9 @@ pipeline {
 
     stages {
 
+        /* =============================================================
+                         MATRIX OS SETUP
+        ============================================================= */
         stage("OS setup") {
             matrix {
                 axes {
@@ -32,25 +35,23 @@ pipeline {
                         values '32', '64'
                     }
                 }
-                excludes{
-                    exclude{
-                        axis{
+
+                excludes {
+                    exclude {
+                        axis {
                             name 'OS'
                             values 'macos'
                         }
-                        axis{
+                        axis {
                             name 'ARCH'
                             values '32'
                         }
                     }
                 }
+
                 stages {
                     stage("OS Setup") {
-                    agent { 
-                        node{
-                        label "linux && java11"
-                        }
-                         }
+                        agent { label "linux && java11" }
                         steps {
                             echo "Setup ${OS} dengan arsitektur ${ARCH}"
                         }
@@ -59,6 +60,9 @@ pipeline {
             }
         }
 
+        /* =============================================================
+                         PARAMETER PRINT
+        ============================================================= */
         stage("Parameter") {
             agent { label "linux && java11" }
             steps {
@@ -70,12 +74,15 @@ pipeline {
             }
         }
 
+        /* =============================================================
+                         PREPARE STAGES
+        ============================================================= */
         stage("Prepare") {
             agent { label "linux && java11" }
             steps {
                 echo "Start Jobs : ${env.JOB_NAME}"
                 echo "Start Build : ${env.BUILD_NUMBER}"
-                echo "Start Build : ${env.BUILD_ID}"
+                echo "Start Build ID : ${env.BUILD_ID}"
             }
         }
 
@@ -95,20 +102,27 @@ pipeline {
             }
         }
 
+        /* =============================================================
+                         BUILD
+        ============================================================= */
         stage('Build') {
             agent { label "linux && java11" }
             steps {
                 echo "Hello Build"
                 sleep 5
                 echo "Bangun dari 5 detik"
+
                 script {
                     for (int i = 0; i < 5; i++) {
-                        echo "perulangan ke ${i}"
+                        echo "Perulangan ke ${i}"
                     }
                 }
             }
         }
 
+        /* =============================================================
+                         TEST
+        ============================================================= */
         stage('Test') {
             agent { label "linux && java11" }
             steps {
@@ -133,11 +147,19 @@ pipeline {
                 ]) {
                     echo("App user: ${APP_USR}")
                     echo("App password: ${APP_PSW}")
-                    sh("echo 'APP Password : ${APP_PSW}' > secret.txt")
+
+                    // Simpan file tanpa bocorkan password ke log
+                    sh """
+                        echo "APP_USER=${APP_USR}" > secret.txt
+                        echo "APP_PASSWORD=${APP_PSW}" >> secret.txt
+                    """
                 }
             }
         }
 
+        /* =============================================================
+                         DEPLOY (WITH MANUAL INPUT)
+        ============================================================= */
         stage('Deploy') {
             agent { label "linux && java11" }
             steps {
@@ -149,7 +171,7 @@ pipeline {
                         parameters: [
                             choice(
                                 name: 'TARGET_ENV',
-                                choices: ['Dev','QA','PROD'],
+                                choices: ['Dev', 'QA', 'PROD'],
                                 description: 'Pilih target environment untuk deploy'
                             )
                         ]
@@ -159,33 +181,42 @@ pipeline {
 
                 echo "Hello Deploy"
                 sleep 5
-                echo "deploy ke environment ${env.TARGET_ENV}"
+                echo "Deploy ke environment ${env.TARGET_ENV}"
             }
         }
 
+        /* =============================================================
+                         RELEASE
+        ============================================================= */
         stage("Release") {
             agent { label "linux && java11" }
             when {
                 expression { return params.FLAG }
             }
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'mikhael_rahasia',
-                    usernameVariable: 'APP_USR',
-                    passwordVariable: 'APP_PSW'
-                )
-                ]){
-                    sh("echo 'APP Password with -u $USER -p $PASSWORD : ${APP_PSW}' > secret.txt")
-
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'mikhael_rahasia',
+                        usernameVariable: 'APP_USR',
+                        passwordVariable: 'APP_PSW'
+                    )
+                ]) {
+                    sh """
+                        echo "Release User: ${APP_USR}" > release-info.txt
+                        echo "Release Password: ${APP_PSW}" >> release-info.txt
+                    """
                 }
             }
         }
     }
 
+    /* =============================================================
+                         POST ACTIONS
+    ============================================================= */
     post {
         always { echo "This will always run" }
-        success { echo "This will success run" }
-        failure { echo "failure" }
-        cleanup { echo "cleanup" }
+        success { echo "Pipeline Success!" }
+        failure { echo "Pipeline Failed!" }
+        cleanup { echo "Cleanup Done" }
     }
 }
