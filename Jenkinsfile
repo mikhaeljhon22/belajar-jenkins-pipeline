@@ -107,6 +107,7 @@ pipeline {
                 echo "Hello Deploy"
                 sleep 5
                 echo "Bangun dari 5 detik"
+                echo "deploy ke environtment ${params.TARGET_ENV}"
             }
         }
     }
